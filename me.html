@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Objective-A Project</title>
+  <style>
+    :root {
+      --primary: #1e88e5;
+      --light: #f1f1f1;
+      --dark: #333;
+      --accent: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    header, footer {
+      background: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    section {
+      background: white;
+      margin: 1rem auto;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 900px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Step 1 - Portfolio */
+    .portfolio nav a {
+      margin: 0 1rem;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .about, .projects, .contact {
+      margin-bottom: 2rem;
+    }
+
+    /* Step 2 - To-Do List */
+    .todo input, .todo button {
+      padding: 0.6rem;
+      font-size: 1rem;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+
+    .todo button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .task {
+      background: var(--light);
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 5px;
+    }
+
+    .task button {
+      background: rgb(22, 86, 151);
+      color: white;
+      border: none;
+      padding: 0.3rem 0.4rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Step 3 - Product List */
+    .filters {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .filters select {
+      padding: 0.5rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .product {
+      background: #fafafa;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+
+    .product:hover {
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+
+<header class="portfolio">
+  <h1>My Full Project</h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="about" class="about">
+  <h2>About Me</h2>
+  <p>I am a passionate web developer currently doing an internship. I love to build websites and apps using HTML, CSS, and JavaScript.</p>
+</section>
+
+<section id="projects" class="projects">
+  <h2>My Projects</h2>
+  <ul>
+    <li>Portfolio Website</li>
+    <li>To-Do List with Local Storage</li>
+    <li>Product Filter Page</li>
+  </ul>
+</section>
+
+<section id="contact" class="contact">
+  <h2>Contact</h2>
+  <p>Email: devi@devi.com</p>
+</section>
+
+<section class="todo">
+  <h2>To-Do List</h2>
+  <input id="taskInput" placeholder="Add a new task" />
+  <button onclick="addTask()">Add Task</button>
+  <div id="taskList"></div>
+</section>
+
+<section>
+  <h2>Product Listing</h2>
+  <div class="filters">
+    <select id="categoryFilter" onchange="renderProducts()">
+      <option value="all">All Categories</option>
+      <option value="books">Books</option>
+      <option value="electronics">Electronics</option>
+    </select>
+    <select id="priceFilter" onchange="renderProducts()">
+      <option value="default">Sort by</option>
+      <option value="low">Low to High</option>
+      <option value="high">High to Low</option>
+    </select>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<footer>
+  <p>&copy; 2025 My Portfolio</p>
+</footer>
+
+<script>
+  // To-Do App
+  const taskInput = document.getElementById("taskInput");
+  const taskList = document.getElementById("taskList");
+
+  function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    taskList.innerHTML = "";
+    tasks.forEach((task, index) => {
+      const div = document.createElement("div");
+      div.className = "task";
+      div.innerHTML = `
+        <span>${task}</span>
+        <button onclick="deleteTask(${index})">X</button>
+      `;
+      taskList.appendChild(div);
+    });
+  }
+
+  function addTask() {
+    const task = taskInput.value.trim();
+    if (task) {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      taskInput.value = "";
+      loadTasks();
+    }
+  }
+
+  function deleteTask(index) {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+  }
+
+  loadTasks();
+
+  // Product List
+  const products = [
+    { name: "Book A", category: "books", price: 120 },
+    { name: "Book B", category: "books", price: 80 },
+    { name: "Headphones", category: "electronics", price: 250 },
+    { name: "Laptop", category: "electronics", price: 700 }
+  ];
+
+  function renderProducts() {
+    const category = document.getElementById("categoryFilter").value;
+    const sort = document.getElementById("priceFilter").value;
+
+    let filtered = [...products];
+    if (category !== "all") {
+      filtered = filtered.filter(p => p.category === category);
+    }
+
+    if (sort === "low") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sort === "high") {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+
+    const grid = document.getElementById("productGrid");
+    grid.innerHTML = "";
+    filtered.forEach(product => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <h4>${product.name}</h4>
+        <p>Category: ${product.category}</p>
+        <p>Price: ₹${product.price}</p>
+      `;
+      grid.appendChild(div);
+    });
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
+
+
